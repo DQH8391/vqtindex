@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lì Xì Generator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f8f8;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: 'Arial', sans-serif;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #loading {
+            border-radius: 100%;
+            display: inline-block; /* Hiển thị loading ngay từ ban đầu */
+            width: 500px;
+            height: 500px;
+            background: url('5.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            animation: spin 3s linear infinite; /* Tốc độ mặc định */
+            margin: 20px auto;
+        }
+
+        #arrow {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: url('arrow.png') no-repeat center center;
+            background-size: cover;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #randomValue {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        /* Modal */
+        #myModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 60%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #closeModal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #closeModal:hover {
+            color: black;
+        }
+
+        #modalText {
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Âm nhạc tự động -->
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="1.mp3" type="audio/mp3">
+    </audio>
+
+    <h1>Chúc Mừng Năm Mới!</h1>
+    <button onclick="generateRandomWithLoading()">Nhận Lì Xì</button>
+    <div id="loading">
+        <div id="arrow"></div>
+    </div>
+    <p id="randomValue"></p>
+
+    <!-- Modal -->
+    <div id="myModal">
+        <span id="closeModal" onclick="closeModal()">&times;</span>
+        <h2 style="color: #3498db;">Lì Xì Mừng Năm Mới!</h2>
+        <p id="modalText"></p>
+        <button onclick="closeModal()">Đóng</button>
+    </div>
+
+    <script>
+        const myArray = ['50k','50k','40k','40k','40k','30k','30k','30k','20k','20k','20k','Chia Đôi','20k','30k','40k', '50k','Mất Lượt','Thêm Lượt ','100k', '200k'];
+
+        function getRandomFromArrayWithProbability(arr) {
+            const randomNumber = Math.random();
+            const probabilityThreshold = 0.1;
+
+            if (randomNumber <= probabilityThreshold) {
+                return arr.slice(-2)[Math.floor(Math.random() * 2)];
+            } else {
+                return arr[Math.floor(Math.random() * (arr.length - 2))];
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'inline-block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function openModal(value) {
+            document.getElementById('myModal').style.display = 'block';
+            document.getElementById('modalText').innerHTML = `Bạn nhận được lì xì: <strong>${value}</strong>`;
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+            resetLoadingSpeed();
+            showLoading(); // Hiển thị lại loading khi đóng modal
+        }
+
+        function generateRandomWithLoading() {
+            showLoading();
+
+            // Tăng tốc độ quay sau khi nhấn nút
+            document.getElementById('loading').style.animation = 'spin 1s linear infinite';
+
+            setTimeout(function () {
+                const randomValue = getRandomFromArrayWithProbability(myArray);
+                document.getElementById('randomValue').textContent = `Lì Xì: ${randomValue}`;
+                openModal(randomValue);
+                hideLoading();
+            }, 4000); // 4 seconds delay
+        }
+        function resetLoadingSpeed() {
+            document.getElementById('loading').style.animationDuration = '3s'; // Đặt lại tốc độ mặc định
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Auto-play background music
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            backgroundMusic.play();
+        });
+    </script>
+</body>
+</html>
